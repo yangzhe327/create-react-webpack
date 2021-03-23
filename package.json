@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "create": "node ./packages/create-rwa"
+    "create": "node ./packages/create-rwa myapp"
   },
   "devDependencies": {
     "lerna": "^3.22.1"

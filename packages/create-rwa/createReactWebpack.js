@@ -20,7 +20,7 @@ async function init() {
         })
         .parse(process.argv);
     console.log(projectName);
-    await createApp('----------projectName', projectName);
+    await createApp(projectName);
 
     if (typeof projectName === 'undefined') {
         console.error('Please specify the project directory:');
@@ -72,8 +72,8 @@ async function createApp(projectName) {
  *  @param {*}  originalDirecttory // 原始的命令工作目录
  */
 async function run(projectName, root, originalDirecttory) {
-    let scriptName = 'rwa-scripts'; //create生成的代码里，源文件变异，启动服务放在了scripts里
-    let templeteName = 'rwa-templete';
+    let scriptName = 'cra-scripts'; //create生成的代码里，源文件编译，启动服务放在了scripts里
+    let templeteName = 'react-scripts';
     const allDependencies = ['react', 'react-dom', scriptName, templeteName];
 
     console.log('Installing packages. This might take a couple of minutes.');
@@ -81,7 +81,7 @@ async function run(projectName, root, originalDirecttory) {
     console.log(
         `Installing ${chalk.cyan('react')}, ${chalk.cyan(
             'react-dom'
-        )}, and ${chalk.cyan(packageInfo.name)}${supportsTemplates ? ` with ${chalk.cyan(templateInfo.name)}` : ''
+        )}, and ${chalk.cyan(scriptName)}${` with ${chalk.cyan(templeteName)}`
         }...`
     );
 
@@ -89,7 +89,7 @@ async function run(projectName, root, originalDirecttory) {
     //项目的名字 项目根目录 verbose是否显示详细信息 原始的目录 模板名称
     let data = [projectName, root, true, originalDirecttory, templeteName];
     let source = `
-    var init = require('${packageName}/scripts/init.js');
+    var init = require('react-scripts/scripts/init.js');
     init.apply(null, JSON.parse(process.argv[1]));
     `;
     await executeNodeScript({ cwd: process.cwd() }, data, source);
@@ -99,7 +99,7 @@ async function run(projectName, root, originalDirecttory) {
 
 async function install(root, allDependencies) {
     return new Promise(resolve => {
-        const command = 'yarn';
+        const command = 'yarnpkg';
         const args = ['add', '--exact', ...allDependencies, '--cwd', root]
 
         console.log('----------', command, args)
